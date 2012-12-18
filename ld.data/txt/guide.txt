@@ -1,0 +1,20 @@
+
+How To Play
+-----------
+
+
+- Move With WASD
+
+- Perform Actions by hitting SPACE
+- Change Action by holding SPACE
+
+Zombies are taking over the city!
+
+Zombies will hurt heroes on contact!
+
+Zombies will call each other for help
+
+Destroy all of the Zombies before 
+they destroy the heroes.
+
+Or dont, whatever, I dont care.

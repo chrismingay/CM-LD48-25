@@ -509,19 +509,25 @@ Class Level
 	End
 	
 	Method CollidesWith:Bool(X:Float, Y:Float, W:Float, H:Float)
+	
+	
 		Local cX1:Int = (X - (X Mod Tile.WIDTH)) / Tile.WIDTH
 		Local cY1:Int = (Y - (Y Mod Tile.HEIGHT)) / Tile.HEIGHT
 		Local cX2:Int = ( (X + W) - ( (X + W) Mod Tile.WIDTH)) / Tile.WIDTH
 		Local cY2:Int = ( (Y + H) - ( (Y + H) Mod Tile.HEIGHT)) / Tile.HEIGHT
 		
 		For Local x:Int = cX1 To cX2
-			For Local y:Int = cY1 To cY2
-				If Tiles[x][y].Obstacle = True
-					If RectOverRect(X, Y, W, H, x * Tile.WIDTH, y * Tile.HEIGHT, Tile.WIDTH, Tile.HEIGHT)
-						Return True
-					End
-				EndIf
-			Next
+			If x >= 0 And x < Width
+				For Local y:Int = cY1 To cY2
+					If y >= 0 And y < Height
+						If Tiles[x][y].Obstacle = True
+							If RectOverRect(X, Y, W, H, x * Tile.WIDTH, y * Tile.HEIGHT, Tile.WIDTH, Tile.HEIGHT)
+								Return True
+							End
+						EndIf
+					EndIf
+				Next
+			EndIf
 		Next
 		
 		Return False

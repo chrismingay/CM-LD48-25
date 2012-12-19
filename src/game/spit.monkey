@@ -91,7 +91,10 @@ Class Spit
 		
 		For Local i:Int = 0 Until level.HeroCount
 			If level.Heroes[i].Alive = True
-				
+				If level.Heroes[i].CollidesWith(X - (Width * 0.5), Y - (Height * 0.5), Width, Height)
+					level.Heroes[i].ReactToSpit(Self)
+					Deactivate()
+				EndIf
 			EndIf
 		Next
 		

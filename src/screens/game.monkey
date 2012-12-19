@@ -11,7 +11,7 @@ Class GameScreen Extends Screen
 	Method OnScreenStart:Void()
 		'level = GenerateLevel()
 		SFX.Music("ruth")
-		SFX.SetGlobalMusicVolume(0.5)
+		SFX.SetGlobalMusicVolume(1.0)
 	End
 	
 	Method OnScreenEnd:Void()

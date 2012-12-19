@@ -433,9 +433,13 @@ Class Zombie Extends Entity
 		SFX.Play("ZombieSpit", SFX.VolumeFromPosition(X, Y), SFX.PanFromPosition(X, Y), Rnd(0.9, 1.1))
 	
 		If Mood = ZombieMood.CHASING And TargetHero <> - 1
-			Spit.Create(X, Y, D + Rnd(-5, 5))
+			For Local i:Int = 0 To 3
+				Spit.Create(X, Y, D + Rnd(-5, 5))
+			Next
 		Else
-			Spit.Create(X, Y, D + Rnd(-25, 25))
+			For Local i:Int = 0 To 1
+				Spit.Create(X, Y, D + Rnd(-25, 25))
+			Next
 		EndIf
 	End
 	

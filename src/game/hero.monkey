@@ -444,6 +444,15 @@ Class Hero Extends Entity
 		TargetZombie = tZom.ID
 	End
 	
+	Method ReactToSpit:Void(tSpit:Spit)
+		Health -= (40.0 + Rnd(0.0, 5.0))
+		Local tD:Float = DirectionBetweenPoints(X, Y, tSpit.X, tSpit.Y) + Rnd(-30, 30)
+		Local tXS:Float = Sin(tD) * tSpit.S * level.delta
+		Local tYS:Float = Cos(tD) * tSpit.S * level.delta
+		D = tD
+		S = -2
+		StartHurting()
+	End
 	
 End
 

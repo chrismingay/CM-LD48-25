@@ -25,6 +25,7 @@ Import src.game.mortarlauncher
 Import src.game.namegenerator
 Import src.game.powerup
 Import src.game.safezone
+Import src.game.spit
 Import src.game.tile
 Import src.game.zombie
 
@@ -93,10 +94,13 @@ Class LDApp Extends App
 		
 		SFX.Add("MortarShoot")
 		
+		SFX.Add("SpitDeactivate")
+		
 		SFX.Add("ZombieBite")
 		SFX.Add("ZombieExplode")
 		SFX.Add("ZombieGroan1")
 		SFX.Add("ZombieHurt1")
+		SFX.Add("ZombieSpit")
 		SFX.Add("ZombieSpotHero")
 		SFX.Add("ZombieStep")
 		

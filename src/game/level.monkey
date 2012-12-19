@@ -181,6 +181,7 @@ Class Level
 		UpdateBloods()
 		UpdateMortarLaunchers()
 		UpdateMortars()
+		Spit.UpdateAll()
 	End
 	
 	Method Update:Void()
@@ -264,6 +265,7 @@ Class Level
 		RenderBullets()
 		RenderZombies()
 		RenderMortars()
+		Spit.RenderAll()
 		RenderBloods()
 		RenderGibs()
 		RenderGUI()
@@ -785,6 +787,8 @@ Function GenerateLevel:Level(tSeed:Int = 19132006)
 	
 	tLev.InitHeroes()
 	tLev.InitZombies()
+	
+	Spit.Init(tLev)
 	
 	tLev.MortarLauncherCount = Rnd(0.0, 12.0)
 	tLev.InitMortarLaunchers()

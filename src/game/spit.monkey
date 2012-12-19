@@ -31,6 +31,14 @@ Class Spit
 			Endif
 		Next	
 	End
+	
+	Function Create:Void(tX:Float, tY:Float, tD:Float)
+		Spits[NextSpit].Activate(tX, tY, tD)
+		NextSpit += 1
+		If NextSpit = MAX_SPITS
+			NextSpit = 0
+		EndIf
+	End
 
 
 	Const Width:Int = 4
@@ -46,7 +54,9 @@ Class Spit
 	Field level:Level
 	Field Active:Bool
 	
-	
+	Field Frame:Int
+	Const FrameTimerTarget:Float = 4
+	Field FrameTimer:Float
 	
 	Method New(tLev:Level)
 		Active = False
@@ -61,12 +71,37 @@ Class Spit
 		
 		If Z >=0
 			Deactivate()
-		Endif
+		EndIf
+		
+		FrameTimer += 1.0 * level.delta
+		If FrameTimer >= FrameTimerTarget
+			FrameTimer = 0
+			Frame += 1
+			If Frame > 1
+				Frame = 0
+			EndIf
+			
+		EndIf
+		
+		If Z > - 8
+			If level.CollidesWith(X - (Width * 0.5), Y - (Height * 0.5), Width, Height)
+				Deactivate()
+			End
+		EndIf
+		
+		For Local i:Int = 0 Until level.HeroCount
+			If level.Heroes[i].Alive = True
+				
+			EndIf
+		Next
 		
 	End
 	
-	Method Render:Void()
 	
+	
+	Method Render:Void()
+		GFX.Draw(X - (Width * 0.5), Y - (Height * 0.5), 40 + (8 * 2), 64, Width, Height)
+		GFX.Draw(X - (Width * 0.5), Y - (Height * 0.5) + Z, 40 + (8 * Frame), 64, Width, Height)
 	End
 	
 	Method IsOnScreen:Bool()
@@ -78,13 +113,15 @@ Class Spit
 		Y = tY
 		D = tD
 		Z = -8
-		ZS = -0.1
+		ZS = -0.3
 		Active = True
+		S = 2
 	End
 	
 	Method Deactivate:Void()
 		Active = False
+		SFX.Play("SpitDeactivate", SFX.VolumeFromPosition(X, Y), SFX.PanFromPosition(X, Y), Rnd(0.9, 1.1))
 	End
 	
 	
-	
+End	

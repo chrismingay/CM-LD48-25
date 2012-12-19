@@ -35,6 +35,9 @@ Class Zombie Extends Entity
 	Field Action2:Int
 	Field Action3:Int
 	
+	Field AICanSpit:Bool = True
+	
+	
 	Field ProcessedLongPress:Bool = False
 	
 	
@@ -293,6 +296,10 @@ Class Zombie Extends Entity
 					LookForHero()
 				EndIf
 				
+				If Rnd() < 0.1
+					ZombieSpit()
+				EndIf
+				
 				
 			
 			Case ZombieMood.CHASING
@@ -311,6 +318,10 @@ Class Zombie Extends Entity
 					If Rnd() < 0.1
 						SFX.Play("ZombieSpotHero", SFX.VolumeFromPosition(X, Y) * 0.5, SFX.PanFromPosition(X, Y), Rnd(0.9, 1.1))
 						level.AlertNearbyZombies(X, Y, ID, TargetHero)
+					EndIf
+					
+					If Rnd() < 0.25
+						ZombieSpit()
 					EndIf
 					
 				End
@@ -415,6 +426,16 @@ Class Zombie Extends Entity
 			EndIf
 			Alive = False
 			level.AliveZombies -= 1
+		EndIf
+	End
+	
+	Method ZombieSpit:Void()
+		SFX.Play("ZombieSpit", SFX.VolumeFromPosition(X, Y), SFX.PanFromPosition(X, Y), Rnd(0.9, 1.1))
+	
+		If Mood = ZombieMood.CHASING And TargetHero <> - 1
+			Spit.Create(X, Y, D + Rnd(-5, 5))
+		Else
+			Spit.Create(X, Y, D + Rnd(-25, 25))
 		EndIf
 	End
 	

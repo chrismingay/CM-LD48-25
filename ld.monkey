@@ -23,6 +23,7 @@ Import src.game.level
 Import src.game.mortar
 Import src.game.mortarlauncher
 Import src.game.namegenerator
+Import src.game.particle
 Import src.game.powerup
 Import src.game.safezone
 Import src.game.spit

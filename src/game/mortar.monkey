@@ -39,6 +39,25 @@ Class Mortar
 	
 	Method Explode:Void()
 		Active = False
+		SFX.Play("ZombieExplode", SFX.VolumeFromPosition(X, Y), SFX.PanFromPosition(X, Y), Rnd(0.9, 1.1))
+		
+		For Local i:Int = 0 Until level.ZombieCount
+			If level.Zombies[i].Alive = True
+				Local tDist:Float = DistanceBetweenPoints(X, Y, level.Zombies[i].X, level.Zombies[i].Y)
+				If tDist < 100
+					Local tDir:Float = DirectionBetweenPoints(X, Y, level.Zombies[i].X, level.Zombies[i].Y)
+					Local tForce:Float = (100 - tDist) / 25.0
+					level.Zombies[i].Health -= (tForce * 20)
+					level.Zombies[i].AdditionalForce(Sin(tDir) * tForce, Cos(tDir) * tForce)
+				EndIf
+			EndIf
+		Next
+		
+		For Local i:Float = 0 Until 350 Step 360
+			Local tXS:Float = Sin(i) * 3.0
+			Local tYS:Float = Cos(i) * 3.0
+			Particle.Add(X,Y,tXS,tYS,ParticleTypes.SMOKE)
+		Next
 	End
 	
 	Method Activate:Void(tX:Float, tY:Float)

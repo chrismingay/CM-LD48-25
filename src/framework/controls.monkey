@@ -7,6 +7,7 @@ Class Controls
 	Global UpKey:Int = KEY_W
 	Global DownKey:Int = KEY_S
 	Global ActionKey:Int = KEY_SPACE
+	Global Action2Key:Int = KEY_ENTER
 	Global EscapeKey:Int = KEY_ESCAPE
 	
 	Global LeftHit:Bool
@@ -22,6 +23,9 @@ Class Controls
 	Global ActionHit:Bool
 	Global ActionDown:Bool
 	
+	Global Action2Hit:Bool
+	Global Action2Down:Bool
+	
 	Global EscapeHit:Bool
 	Global EscapeDown:Bool
 	
@@ -32,6 +36,7 @@ Class Controls
 		DownHit = False
 		UpHit = False
 		ActionHit = False
+		Action2Hit = False
 		EscapeHit = False
 		
 		If KeyDown(LeftKey)
@@ -77,6 +82,15 @@ Class Controls
 			ActionDown = True
 		Else
 			ActionDown = False
+		End
+		
+		If KeyDown(Action2Key)
+			If Action2Down = False
+				Action2Hit = True
+			EndIf
+			Action2Down = True
+		Else
+			Action2Down = False
 		End
 		
 		If KeyDown(EscapeKey)

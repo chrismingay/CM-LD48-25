@@ -182,6 +182,7 @@ Class Level
 		UpdateMortarLaunchers()
 		UpdateMortars()
 		Spit.UpdateAll()
+		Particle.UpdateAll()
 	End
 	
 	Method Update:Void()
@@ -193,12 +194,12 @@ Class Level
 			' SubUpdate()
 		EndIf
 		
-		
-		If KeyHit(KEY_ENTER)
-			If delta = 1.0
-				delta = 0.25
-			Else
-				delta = 1.0
+		If Zombies[controlledZombie].Alive = False And Controls.Action2Hit
+			Local tI:Int = FindNearestZombie(LDApp.ScreenX + (LDApp.ScreenWidth * 0.5), LDApp.ScreenY + (LDApp.ScreenHeight * 0.5), False)
+			If tI <> - 1
+				Zombies[controlledZombie].Controlled = False
+				controlledZombie = tI
+				Zombies[controlledZombie].Controlled = True
 			EndIf
 		EndIf
 	End
@@ -268,6 +269,7 @@ Class Level
 		Spit.RenderAll()
 		RenderBloods()
 		RenderGibs()
+		Particle.RenderAll()
 		RenderGUI()
 		
 		If Zombies[controlledZombie].Alive = False And GameStatus = PLAYING
@@ -674,6 +676,30 @@ Class Level
 		SFX.Play("ZombieExplode", SFX.VolumeFromPosition(tX, tY), SFX.PanFromPosition(tX, tY), Rnd(0.9, 1.1))
 	End
 	
+	Method FindNearestZombie:Int(tX:Float, tY:Float, lineOfSightRequired:Bool = True)
+		Local zomFound:Bool = False
+		Local zomID:Int = -1
+		Local zomDist:Float = 99999999999999
+		For Local i:Int = 0 Until ZombieCount
+			If Zombies[i].Alive = True
+				Local tDist:Float = DistanceBetweenPoints(tX, tY, Zombies[i].X, Zombies[i].Y)
+				If tDist < zomDist
+					If lineOfSightRequired = False Or CheckLineOfSight(tX, tY, Zombies[i].X, Zombies[i].Y)
+						zomFound = True
+						zomID = i
+						zomDist = tDist
+					End
+				EndIf
+			EndIf
+		Next
+		
+		If zomFound = True
+			Return zomID
+		Else
+			Return -1
+		End
+	End
+	
 End
 
 Function GenerateLevel:Level(tSeed:Int = 19132006)
@@ -795,6 +821,7 @@ Function GenerateLevel:Level(tSeed:Int = 19132006)
 	tLev.InitZombies()
 	
 	Spit.Init(tLev)
+	Particle.Init(tLev)
 	
 	tLev.MortarLauncherCount = Rnd(0.0, 12.0)
 	tLev.InitMortarLaunchers()
@@ -833,8 +860,6 @@ Function GenerateLevel:Level(tSeed:Int = 19132006)
 			
 			tLev.MortarLaunchers[generatedMLs].X = tX
 			tLev.MortarLaunchers[generatedMLs].Y = tY
-			
-			Print tX + "," + tY
 			
 			generatedMLs += 1
 			

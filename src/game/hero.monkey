@@ -235,7 +235,6 @@ Class Hero Extends Entity
 	End
 	
 	Method StartGoingForMortarLauncher:Void()
-		Print "Going for launcher"
 		LookForMortarLauncher()
 	End
 	

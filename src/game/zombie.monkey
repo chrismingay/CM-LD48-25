@@ -419,7 +419,7 @@ Class Zombie Extends Entity
 	Method Die:Void()
 		If Alive = True
 			If Health < - 50.0
-				SFX.Play("ZombieExplode", SFX.VolumeFromPosition(X, Y), SFX.PanFromPosition(X, Y), Rnd(0.9, 1.1))
+				SFX.Play("ZombieExplode", SFX.VolumeFromPosition(X, Y) * 0.75, SFX.PanFromPosition(X, Y), Rnd(0.9, 1.1))
 				For Local i:Int = 0 Until 10
 					level.ActivateGib(X, Y)
 				Next

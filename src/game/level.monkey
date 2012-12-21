@@ -128,25 +128,25 @@ Class Level
 	Method SubUpdate:Void()
 	
 		If Zombies[controlledZombie].Alive = True
-			LDApp.ScreenX = Zombies[controlledZombie].X - (LDApp.ScreenWidth * 0.5)
-			LDApp.ScreenY = Zombies[controlledZombie].Y - (LDApp.ScreenHeight * 0.5)
+			LDApp.TargetScreenX = Zombies[controlledZombie].X - (LDApp.ScreenWidth * 0.5)
+			LDApp.TargetScreenY = Zombies[controlledZombie].Y - (LDApp.ScreenHeight * 0.5)
 		Else
 			If Controls.LeftDown
-				LDApp.ScreenX -= 4
+				LDApp.TargetScreenX -= 4
 			EndIf
 			If Controls.RightDown
-				LDApp.ScreenX += 4
+				LDApp.TargetScreenX += 4
 			EndIf
 			If Controls.UpDown
-				LDApp.ScreenY -= 4
+				LDApp.TargetScreenY -= 4
 			EndIf
 			If Controls.DownDown
-				LDApp.ScreenY += 4
+				LDApp.TargetScreenY += 4
 			EndIf
 		End
 		
-		LDApp.ScreenX = Clamp(LDApp.ScreenX, 0, (Width * Tile.WIDTH) - LDApp.ScreenWidth)
-		LDApp.ScreenY = Clamp(LDApp.ScreenY, 0, (Height * Tile.HEIGHT) - LDApp.ScreenHeight)
+		LDApp.TargetScreenX = Clamp(LDApp.TargetScreenX, 0.0, Float( (Width * Tile.WIDTH) - LDApp.ScreenWidth))
+		LDApp.TargetScreenY = Clamp(LDApp.TargetScreenY, 0.0, Float( (Height * Tile.HEIGHT) - LDApp.ScreenHeight))
 		
 		If GameStatus = Level.PLAYING
 			If AliveZombies = 0 And AliveHeroes = 0
@@ -192,6 +192,9 @@ Class Level
 			SubUpdate()
 			SubUpdate()
 			' SubUpdate()
+			SFX.SoundVolume = 0.33
+		Else
+			SFX.SoundVolume = 1.0
 		EndIf
 		
 		If Zombies[controlledZombie].Alive = False And Controls.Action2Hit

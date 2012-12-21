@@ -53,6 +53,15 @@ Class LDApp Extends App
 	Global ScreenX:Int = 0
 	Global ScreenY:Int = 0
 	
+	Global TargetScreenX:Float = 0
+	Global TargetScreenY:Float = 0
+	
+	Global ActualScreenX:Int = 0
+	Global ActualScreenY:Int = 0
+	
+	Global ScreenMoveRate:Float = 0.1
+	
+	
 	Method OnCreate:Int()
 		
 		GFX.Init()
@@ -129,31 +138,11 @@ Class LDApp Extends App
 	
 		Controls.Update()
 	
-		Local ScreenChanged:Bool = False
-		If KeyHit(KEY_1)
-			ScreenManager.ChangeScreen("logo")
-			ScreenChanged = True
-		EndIf
+		ActualScreenX += ( (TargetScreenX - ActualScreenX) * ScreenMoveRate)
+		ActualScreenY += ( (TargetScreenY - ActualScreenY) * ScreenMoveRate)
 		
-		If KeyHit(KEY_2)
-			ScreenManager.ChangeScreen("title")
-			ScreenChanged = True
-		EndIf
-		
-		If KeyHit(KEY_3)
-			ScreenManager.ChangeScreen("postgamehero")
-			ScreenChanged = True
-		EndIf
-		
-		If KeyHit(KEY_4)
-			ScreenManager.ChangeScreen("credits")
-			ScreenChanged = True
-		EndIf
-		
-		If KeyHit(KEY_5)
-			ScreenManager.ChangeScreen("exit")
-			ScreenChanged = True
-		EndIf
+		ScreenX = Int(ActualScreenX)
+		ScreenY = Int(ActualScreenY)
 		
 		ScreenManager.Update()
 		Return 0

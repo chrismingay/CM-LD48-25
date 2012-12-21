@@ -53,9 +53,9 @@ Class Mortar
 			EndIf
 		Next
 		
-		For Local i:Float = 0 Until 350 Step 360
-			Local tXS:Float = Sin(i) * 3.0
-			Local tYS:Float = Cos(i) * 3.0
+		For Local i:Float = 0 Until 350 Step 36
+			Local tXS:Float = Sin(i) * 1.0
+			Local tYS:Float = Cos(i) * 0.66
 			Particle.Add(X,Y,tXS,tYS,ParticleTypes.SMOKE)
 		Next
 	End

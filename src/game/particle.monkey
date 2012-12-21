@@ -64,10 +64,14 @@ Class Particle
 	
 	Method Update:Void()
 	
-		X += XS
-		Y += YS
+		X += (XS * level.delta)
+		Y += (YS * level.delta)
 		
-	
+		Select Type
+			Case ParticleTypes.SMOKE
+				XS *= 1.0 - (0.02 * level.delta)
+				YS *= 1.0 - (0.02 * level.delta)
+		End
 	
 		lifeSpan -= 1.0 * level.delta
 		If lifeSpan <= 0
@@ -81,13 +85,11 @@ Class Particle
 		Else
 			SetAlpha(1.0)
 		EndIf
-		Print "Drawing"
 		GFX.Draw(X - 8, Y - 8, DRAW_X + (Type * 16), DRAW_Y, 16, 16)
 	End
 	
 	Method Deactivate:Void()
 		Active = False
-		Print "Died"
 	End
 	
 	Method Activate(tX:Float, tY:Float, tXS:Float, tYS:Float, tType:Int)
@@ -96,10 +98,11 @@ Class Particle
 		Y = tY
 		XS = tXS
 		YS = tYS
+		
 		Type = tType
 		Select tType
 			Case ParticleTypes.SMOKE
-				lifeSpan = 120.0
+				lifeSpan = 40.0
 		End
 	End
 	

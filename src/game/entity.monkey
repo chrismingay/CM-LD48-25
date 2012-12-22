@@ -51,10 +51,14 @@ Class Entity
 	
 	Method CheckAgainstLevel:Void(Width:Float, Height:Float)
 		If level.CollidesWith(X - (Width * 0.5), Y - (Height * 0.5), Width, Height)
-			Local colLeft:Bool = level.CollidesWith(X - (Width * 0.5), Y - (Height * 0.25), 2, Height * 0.5)
-			Local colRight:Bool = level.CollidesWith(X + (Width * 0.5) - 2, Y - (Height * 0.25), 2, Height * 0.5)
-			Local colAbove:Bool = level.CollidesWith(X + (Width * 0.25), Y - (Height * 0.5), Width * 0.5, 2)
-			Local colBelow:Bool = level.CollidesWith(X + (Width * 0.25), Y + (Height * 0.5) - 2, Width * 0.5, 2)
+		
+			Local colLeft:Bool = level.CollidesWith(X - (Width * 0.5), Y - (Height * 0.22), 1, Height * 0.4)
+			
+			Local colRight:Bool = level.CollidesWith(X + (Width * 0.5) - 1, Y - (Height * 0.2), 1, Height * 0.4)
+			
+			Local colAbove:Bool = level.CollidesWith(X + (Width * 0.2), Y - (Height * 0.5), Width * 0.4, 1)
+			
+			Local colBelow:Bool = level.CollidesWith(X + (Width * 0.2), Y + (Height * 0.5) - 1, Width * 0.4, 1)
 			
 			If colLeft And Sin(D) < 0.0
 				D = 180 + (180 - D)
@@ -78,6 +82,7 @@ Class Entity
 			
 			If D < 0.0 Then D += 360.0
 			If D > 360.0 Then D -= 360.0
+			
 			
 		End
 	End

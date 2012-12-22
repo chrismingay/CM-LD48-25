@@ -44,9 +44,9 @@ Class Mortar
 		For Local i:Int = 0 Until level.ZombieCount
 			If level.Zombies[i].Alive = True
 				Local tDist:Float = DistanceBetweenPoints(X, Y, level.Zombies[i].X, level.Zombies[i].Y)
-				If tDist < 100
+				If tDist < 50
 					Local tDir:Float = DirectionBetweenPoints(X, Y, level.Zombies[i].X, level.Zombies[i].Y)
-					Local tForce:Float = (100 - tDist) / 25.0
+					Local tForce:Float = (50 - tDist) / 12.5
 					level.Zombies[i].Health -= (tForce * 20)
 					level.Zombies[i].AdditionalForce(Sin(tDir) * tForce, Cos(tDir) * tForce)
 				EndIf

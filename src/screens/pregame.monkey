@@ -54,7 +54,7 @@ Class PreGameScreen Extends Screen
 			ScreenManager.ChangeScreen("game")
 		EndIf
 		
-		If KeyHit(KEY_ENTER)
+		If Controls.Action2Hit
 			Randomize()
 		EndIf
 		

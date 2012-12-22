@@ -35,6 +35,11 @@ Class Zombie Extends Entity
 	Field Action2:Int
 	Field Action3:Int
 	
+	Field Action1CoolDown:Float
+	Field Action2CoolDown:Float
+	Field Action3CoolDown:Float
+	
+	
 	Field AICanSpit:Bool = True
 	
 	
@@ -58,9 +63,37 @@ Class Zombie Extends Entity
 		ID = tID
 		StartWandering()
 		
-		Action1 = ActionType.CALL_TO_ARMS
-		Action2 = ActionType.NOTHING
 		Action3 = ActionType.NOTHING
+		
+		UpdateAction(0, ActionType.CALL_TO_ARMS)
+		UpdateAction(1, ActionType.SPIT)
+		
+		
+		
+	End
+	
+	Method UpdateAction:Void(actionIndex:Int, actionType:Int)
+		
+		Local tC:Float
+	
+		Select actionType
+			Case ActionType.CALL_TO_ARMS
+				tC = ActionCoolDown.CALL_TO_ARMS
+			Case ActionType.SPIT
+				tC = ActionCoolDown.SPIT
+		End
+		
+		Select actionIndex
+			Case 0
+				Action1 = actionType
+				Action1CoolDown = tC
+			Case 1
+				Action2 = actionType
+				Action2CoolDown = tC
+			Case 2
+				Action2 = actionType
+				Action2CoolDown = tC
+		End
 		
 	End
 
@@ -77,6 +110,24 @@ Class Zombie Extends Entity
 	End
 	
 	Method UpdateALive:Void()
+	
+		If Action1CoolDown > 0.0
+			Action1CoolDown -= 1.0 * level.delta
+		Else
+			Action1CoolDown = 0.0
+		EndIf
+		
+		If Action2CoolDown > 0.0
+			Action2CoolDown -= 1.0 * level.delta
+		Else
+			Action2CoolDown = 0.0
+		EndIf
+		
+		If Action3CoolDown > 0.0
+			Action3CoolDown -= 1.0 * level.delta
+		Else
+			Action3CoolDown = 0.0
+		EndIf
 	
 		X += (Sin(D) * S * level.delta)
 		Y += (Cos(D) * S * level.delta)
@@ -198,7 +249,7 @@ Class Zombie Extends Entity
 			EndIf
 		
 		Else
-			If ActionKeyDownTime < 10 And ActionKeyDownTime >= 1 And ProcessedLongPress = False
+			If ActionKeyDownTime < 20 And ActionKeyDownTime > 0 And ProcessedLongPress = False
 				hasShortPress = True
 			EndIf
 			ActionKeyDownTime = 0
@@ -207,35 +258,77 @@ Class Zombie Extends Entity
 		EndIf
 		
 		If hasHoldPress = True
-			SFX.Play("click")
+			SFX.Play("Click")
 			CurrentAction += 1
 			If CurrentAction = 3
 				CurrentAction = 0
 			EndIf
 		ElseIf hasShortPress = True
 			Local tA:Int
+			Local tCool:Float
 			Select CurrentAction
 				Case 0
 					tA = Action1
+					tCool = Action1CoolDown
 				Case 1
 					tA = Action2
+					tCool = Action2CoolDown
 				Case 2
 					tA = Action3
+					tCool = Action3CoolDown
 			End
 			
-			Select tA
-				Case ActionType.NOTHING
-				
-				Case ActionType.CALL_TO_ARMS
-					level.CallToArms(X, Y, ID)
-					SFX.Play("ZombieSpotHero", SFX.VolumeFromPosition(X, Y) * 0.5, SFX.PanFromPosition(X, Y), Rnd(0.5, 2.0))
-				Case ActionType.SCARE
-				
-				Case ActionType.SHIELD
-				
-				Case ActionType.SPIT
-				
-			End
+			
+			If tCool = 0
+				Select tA
+					Case ActionType.NOTHING
+					
+					Case ActionType.CALL_TO_ARMS
+						level.CallToArms(X, Y, ID)
+						SFX.Play("ZombieSpotHero", SFX.VolumeFromPosition(X, Y) * 0.5, SFX.PanFromPosition(X, Y), Rnd(0.5, 2.0))
+						
+						Select CurrentAction
+						Case 0
+							Action1CoolDown = ActionCoolDown.CALL_TO_ARMS
+						Case 1
+							Action2CoolDown = ActionCoolDown.CALL_TO_ARMS
+						Case 2
+							Action3CoolDown = ActionCoolDown.CALL_TO_ARMS
+						End
+						
+					Case ActionType.SCARE
+						
+						Select CurrentAction
+						Case 0
+							Action1CoolDown = ActionCoolDown.SCARE
+						Case 1
+							Action2CoolDown = ActionCoolDown.SCARE
+						Case 2
+							Action3CoolDown = ActionCoolDown.SCARE
+						End
+					Case ActionType.SHIELD
+					
+						Select CurrentAction
+						Case 0
+							Action1CoolDown = ActionCoolDown.SHIELD
+						Case 1
+							Action2CoolDown = ActionCoolDown.SHIELD
+						Case 2
+							Action3CoolDown = ActionCoolDown.SHIELD
+						End
+					Case ActionType.SPIT
+						ZombieSpit()
+						Select CurrentAction
+						Case 0
+							Action1CoolDown = ActionCoolDown.SPIT
+						Case 1
+							Action2CoolDown = ActionCoolDown.SPIT
+						Case 2
+							Action3CoolDown = ActionCoolDown.SPIT
+						End
+						
+				End
+			EndIf
 			
 		EndIf
 		
@@ -463,4 +556,14 @@ Class ActionType
 	Const SHIELD:Int = 3
 	Const SCARE:Int = 4
 	
+End
+
+Class ActionCoolDown
+	
+	Const NOTHING:Float = 0.0
+	Const CALL_TO_ARMS:Float = 120.0
+	Const SPIT:Float = 30.0
+	Const SHIELD:Float = 240.0
+	Const SCARE:Float = 60.0
+
 End

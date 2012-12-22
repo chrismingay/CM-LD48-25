@@ -17,7 +17,7 @@ Class MortarLauncher
 	Field Status:Int
 	
 	Field ReloadCounter:Float
-	Const ReloadTarget:Float = 10.0
+	Const ReloadTarget:Float = 60.0
 	
 	Const DRAW_OFFSET_X:Int = 0
 	Const DRAW_OFFSET_Y:Int = 16
@@ -44,6 +44,7 @@ Class MortarLauncher
 	End
 	
 	Method Shoot:Void()
+		Status = RELOADING
 		ReloadCounter = 0.0
 		level.ActivateMortar(X, Y)
 		SFX.Play("MortarShoot", SFX.VolumeFromPosition(X, Y), SFX.PanFromPosition(X, Y))

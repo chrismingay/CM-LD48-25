@@ -103,8 +103,8 @@ Class Spit
 	
 	
 	Method Render:Void()
-		GFX.Draw(X - (Width * 0.5), Y - (Height * 0.5), 40 + (8 * 2), 64, Width, Height)
-		GFX.Draw(X - (Width * 0.5), Y - (Height * 0.5) + Z, 40 + (8 * Frame), 64, Width, Height)
+		GFX.Draw(X - (Width * 0.5), Y - (Height * 0.5), 16, 88, Width, Height)
+		GFX.Draw(X - (Width * 0.5), Y - (Height * 0.5) + Z, 0 + (8 * Frame), 88, Width, Height)
 	End
 	
 	Method IsOnScreen:Bool()
@@ -122,8 +122,10 @@ Class Spit
 	End
 	
 	Method Deactivate:Void()
-		Active = False
-		SFX.Play("SpitDeactivate", SFX.VolumeFromPosition(X, Y), SFX.PanFromPosition(X, Y), Rnd(0.9, 1.1))
+		If Active = True
+			Active = False
+			SFX.Play("SpitDeactivate", SFX.VolumeFromPosition(X, Y) * 0.1, SFX.PanFromPosition(X, Y), Rnd(0.9, 1.1))
+		EndIf
 	End
 	
 	

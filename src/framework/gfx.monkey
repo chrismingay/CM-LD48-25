@@ -29,3 +29,16 @@ Function DrawBackground:Void()
 		Next
 	Next
 End
+
+Function DrawHollowRect:Void(tX:Int, tY:Int, tW:Int, tH:Int)
+	Local X1:Int = tX
+	Local Y1:Int = tY
+	Local X2:Int = tX + tW
+	Local Y2:Int = tY + tH
+	
+	DrawLine(X1, Y1, X2, Y1)
+	DrawLine(X1, Y2, X2, Y2)
+	DrawLine(X1, Y1, X1, Y2)
+	DrawLine(X2, Y1, X2, Y2)
+	
+End

@@ -250,12 +250,14 @@ Class Hero Extends Entity
 			If level.MortarLaunchers[i].Active = True
 				Local tDist:Float = DistanceBetweenPoints(X, Y, level.MortarLaunchers[i].X, level.MortarLaunchers[i].Y)
 				If tDist < 300
-					launcherFound = True
-					If tDist < currentDistance
+					If level.MortarLaunchers[i].Status = MortarLauncher.READY
+						launcherFound = True
+						If tDist < currentDistance
 						
-						currentDistance = tDist
-						currentClosest = i
-					End
+							currentDistance = tDist
+							currentClosest = i
+						End
+					EndIf
 				EndIf
 			EndIf
 		Next
@@ -347,6 +349,11 @@ Class Hero Extends Entity
 		If Alive = True
 			Alive = False
 			SFX.Play("HeroDie", SFX.VolumeFromPosition(X, Y), SFX.PanFromPosition(X, Y))
+			For Local i:Int = 0 Until 2
+				level.ActivateGib(X, Y, GibType.HUMAN_FLESH)
+				level.ActivateGib(X, Y, GibType.BONE)
+			Next
+			level.ActivateGib(X, Y, GibType.SKULL)
 			level.AliveHeroes -= 1
 		End
 	End
@@ -440,6 +447,7 @@ Class Hero Extends Entity
 		D = tD
 		S = -2
 		StartHurting()
+		level.ActivateGib(X, Y, GibType.HUMAN_FLESH)
 		TargetZombie = tZom.ID
 	End
 	

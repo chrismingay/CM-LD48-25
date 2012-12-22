@@ -114,7 +114,9 @@ Class TitleScreen Extends Screen
 		
 		GFX.Draw(84, 96 + (ActiveButton * 16), 16, 256, 16, 16, False)
 		
-		GFX.Draw(LDApp.ScreenWidth - 58, LDApp.ScreenHeight - 24, 64, 256, 64, 20, False)
+		If Controls.ControlMethod = ControlMethodTypes.KEYBOARD
+			GFX.Draw(LDApp.ScreenWidth - 58, LDApp.ScreenHeight - 24, 64, 256, 64, 20, False)
+		EndIf
 		
 		
 	

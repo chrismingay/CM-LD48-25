@@ -2,6 +2,10 @@ Import ld
 
 Class Gib
 
+	Const DRAW_X:Int = 32
+	Const DRAW_Y:Int = 64
+	
+
 	Field level:Level
 	
 	Const Width:Int = 8
@@ -21,8 +25,11 @@ Class Gib
 	Const FrameDelay:Float = 6.0
 	Field FrameDelayTimer:Float
 	
+	Field canBleed:Bool
 	Const BloodDelay:Float = 6.0
 	Field BloodDelayTimer:Float
+	
+	Field Type:Int
 	
 	
 	Method New(tLev:Level)
@@ -30,15 +37,24 @@ Class Gib
 		level = tLev
 	End
 	
-	Method Activate:Void(tX:Float, tY:Float)
+	Method Activate:Void(tX:Float, tY:Float, tType:Int = GibType.ZOMBIE_FLESH)
 		Active = True
 		X = tX
 		Y = tY
+		
+		Type = tType
 		
 		D = Rnd(0, 360)
 		S = Rnd(0.5, 1.0)
 		
 		ZS = Rnd(-2, -1)
+		
+		Select Type
+			Case GibType.ZOMBIE_FLESH, GibType.HUMAN_FLESH
+				canBleed = True
+			Default
+				canBleed = False
+		End
 		
 		Frame = 0
 		FrameDelayTimer = 0
@@ -77,16 +93,18 @@ Class Gib
 			EndIf
 		EndIf
 		
-		BloodDelayTimer += 1.0 * level.delta
-		If BloodDelayTimer >= BloodDelay
-			level.ActivateBlood(X, Y, Z)
-			BloodDelayTimer = 0.0
+		If canBleed
+			BloodDelayTimer += 1.0 * level.delta
+			If BloodDelayTimer >= BloodDelay
+				level.ActivateBlood(X, Y, Z)
+				BloodDelayTimer = 0.0
+			EndIf
 		EndIf
 	End
 	
 	Method Render:Void()
-		GFX.Draw(X - 4, Y - 4, 32, 64, 8, 8)
-		GFX.Draw(X - 4, Y - 4 + Z, 0 + (Frame * 8), 64, 8, 8)
+		GFX.Draw(X - 4, Y - 4, 16, 56, 8, 8)
+		GFX.Draw(X - 4, Y - 4 + Z, (Type * 32) + (Frame * 8), 64, 8, 8)
 	End
 	
 	Method IsOnScreen:Bool()
@@ -94,4 +112,11 @@ Class Gib
 	End
 
 
+End
+
+Class GibType
+	Const ZOMBIE_FLESH:Int = 0
+	Const HUMAN_FLESH:Int = 1
+	Const SKULL:Int = 2
+	Const BONE:Int = 3
 End

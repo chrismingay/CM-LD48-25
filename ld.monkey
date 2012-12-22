@@ -12,6 +12,8 @@ Import src.framework.rect
 Import src.framework.screen
 Import src.framework.screenmanager
 Import src.framework.sfx
+Import src.framework.touchbutton
+Import src.framework.virtualstick
 
 Import src.game.blood
 Import src.game.bullet
@@ -26,6 +28,7 @@ Import src.game.namegenerator
 Import src.game.particle
 Import src.game.powerup
 Import src.game.safezone
+Import src.game.shout
 Import src.game.spit
 Import src.game.tile
 Import src.game.zombie
@@ -61,12 +64,17 @@ Class LDApp Extends App
 	
 	Global ScreenMoveRate:Float = 0.1
 	
+	Global RefreshRate:Int
+	Global Delta:Float
+	
 	
 	Method OnCreate:Int()
 		
 		GFX.Init()
 		ScreenManager.Init()
 		SFX.Init()
+		Controls.Init()
+		
 		
 		RazText.SetTextSheet(LoadImage("gfx/fonts.png"))
 		
@@ -127,7 +135,15 @@ Class LDApp Extends App
 		ScreenManager.SetFadeRate(0.1)
 		ScreenManager.SetScreen("title")
 		
-		SetUpdateRate(60)
+		If Controls.ControlMethod = ControlMethodTypes.TOUCH
+			RefreshRate = 30
+		Else
+			RefreshRate = 60
+		End
+		
+		SetUpdateRate(RefreshRate)
+		Delta = RefreshRate / 60.0
+		
 		
 		SetVirtualDisplay(ScreenWidth, ScreenHeight)
 		

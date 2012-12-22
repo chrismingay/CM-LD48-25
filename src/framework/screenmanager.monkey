@@ -75,6 +75,17 @@ Class ScreenManager
 			ActiveScreen.Render()
 		EndIf
 		
+		SetColor(255, 255, 255)
+		SetAlpha(1.0)
+		If Controls.ControlMethod = ControlMethodTypes.TOUCH
+			Controls.TCMove.DoRenderRing()
+			Controls.TCMove.DoRenderStick()
+			
+			Controls.TCAction1.Render()
+			Controls.TCAction2.Render()
+			Controls.TCEscapeKey.Render()
+		EndIf
+		
 		If FadeMode <> WAITING
 			SetColor(FadeRed, FadeGreen, FadeBlue)
 			SetAlpha(FadeAlpha)

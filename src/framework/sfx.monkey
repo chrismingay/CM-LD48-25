@@ -13,6 +13,9 @@ Class SFX
 	Global CurrentMusic:String
 	
 	Global SoundFileAppendix:String = ".wav"
+	
+	Global MusicActive:Bool = True
+	
 
 	Function Init:Void()
 		ActiveChannel = 0
@@ -77,6 +80,10 @@ Class SFX
 	
 	Function Music:Void(tMus:String, tLoop:Int = 1)
 		
+		If MusicActive = False
+			Return
+		EndIf
+	
 		If Not Musics.Contains(tMus)
 			Error "Music " + tMus + " does not appear to exist"
 		EndIf

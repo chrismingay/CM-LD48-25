@@ -59,6 +59,7 @@ Class Level
 	Method New()
 		GameStatus = PLAYING
 		TransitionTimer = 0
+		delta = LDApp.Delta
 	End
 	
 	Method InitTiles:Void()
@@ -132,16 +133,16 @@ Class Level
 			LDApp.TargetScreenY = Zombies[controlledZombie].Y - (LDApp.ScreenHeight * 0.5)
 		Else
 			If Controls.LeftDown
-				LDApp.TargetScreenX -= 4
+				LDApp.TargetScreenX -= 3
 			EndIf
 			If Controls.RightDown
-				LDApp.TargetScreenX += 4
+				LDApp.TargetScreenX += 3
 			EndIf
 			If Controls.UpDown
-				LDApp.TargetScreenY -= 4
+				LDApp.TargetScreenY -= 3
 			EndIf
 			If Controls.DownDown
-				LDApp.TargetScreenY += 4
+				LDApp.TargetScreenY += 3
 			EndIf
 		End
 		
@@ -183,6 +184,7 @@ Class Level
 		UpdateMortars()
 		Spit.UpdateAll()
 		Particle.UpdateAll()
+		Shout.UpdateAll()
 	End
 	
 	Method Update:Void()
@@ -262,6 +264,9 @@ Class Level
 	Method Render:Void()
 		RenderTiles()
 		safezone.Render()
+		
+		Shout.RenderAll()
+		
 		RenderZombies(False)
 		RenderHeroes(False)
 		RenderMortarLaunchers()
@@ -311,7 +316,7 @@ Class Level
 		SetAlpha(1.0)
 		SetColor(255, 255, 255)
 		For Local i:Int = 0 Until ZombieCount
-			If i <> controlledZombie
+			If i <> controlledZombie Or tAlive = False
 				If Zombies[i].IsOnScreen()
 					If Zombies[i].Alive = tAlive
 						Zombies[i].Render()
@@ -451,12 +456,77 @@ Class Level
 		hX = 254
 		hY = 220
 		
+		If Zombies[controlledZombie].Action1CoolDown = 0.0
+			SetAlpha(1.0)
+			SetColor(255, 255, 255)
+		Else
+			SetAlpha(0.25)
+			SetColor(255, 255, 0)
+			Local tW:Float
+			Select Zombies[controlledZombie].Action1
+				Case ActionType.CALL_TO_ARMS
+					tW = ActionCoolDown.CALL_TO_ARMS
+				Case ActionType.SHIELD
+					tW = ActionCoolDown.SHIELD
+				Case ActionType.SPIT
+					tW = ActionCoolDown.SPIT
+				Case ActionType.SCARE
+					tW = ActionCoolDown.SCARE
+			End
+			Local dW:Float = ( (Zombies[controlledZombie].Action1CoolDown / tW) * 14)
+			DrawRect(hX, hY + 8, dW, 8)
+		EndIf
 		GFX.Draw(hX, hY, 0 + (Zombies[controlledZombie].Action1 * 16), 320, 16, 16, False)
-		'Print(0 + (Zombies[controlledZombie].Action1 * 16))
+		
 		hX += 24
+		If Zombies[controlledZombie].Action2CoolDown = 0.0
+			SetAlpha(1.0)
+			SetColor(255, 255, 255)
+		Else
+			SetAlpha(0.25)
+			SetColor(255, 255, 0)
+			Local tW:Float
+			Select Zombies[controlledZombie].Action2
+				Case ActionType.CALL_TO_ARMS
+					tW = ActionCoolDown.CALL_TO_ARMS
+				Case ActionType.SHIELD
+					tW = ActionCoolDown.SHIELD
+				Case ActionType.SPIT
+					tW = ActionCoolDown.SPIT
+				Case ActionType.SCARE
+					tW = ActionCoolDown.SCARE
+			End
+			Local dW:Float = ( (Zombies[controlledZombie].Action2CoolDown / tW) * 14)
+			DrawRect(hX, hY + 8, dW, 8)
+		EndIf
 		GFX.Draw(hX, hY, 0 + (Zombies[controlledZombie].Action2 * 16), 320, 16, 16, False)
+		
 		hX += 24
-		GFX.Draw(hX, hY, 0 + (Zombies[controlledZombie].Action2 * 16), 320, 16, 16, False)
+		If Zombies[controlledZombie].Action3CoolDown = 0.0
+			SetAlpha(1.0)
+			SetColor(255, 255, 255)
+		Else
+			SetAlpha(0.25)
+			SetColor(255, 255, 0)
+			Local tW:Float
+			Select Zombies[controlledZombie].Action3
+				Case ActionType.CALL_TO_ARMS
+					tW = ActionCoolDown.CALL_TO_ARMS
+				Case ActionType.SHIELD
+					tW = ActionCoolDown.SHIELD
+				Case ActionType.SPIT
+					tW = ActionCoolDown.SPIT
+				Case ActionType.SCARE
+					tW = ActionCoolDown.SCARE
+			End
+			Local dW:Float = ( (Zombies[controlledZombie].Action3CoolDown / tW) * 14)
+			DrawRect(hX, hY + 8, dW, 8)
+		EndIf
+		
+		GFX.Draw(hX, hY, 0 + (Zombies[controlledZombie].Action3 * 16), 320, 16, 16, False)
+		
+		
+		
 		
 		' DrawText(AliveZombies,320-17,cY - 16)
 		
@@ -568,11 +638,11 @@ Class Level
 		Wend
 	End
 	
-	Method ActivateGib:Void(tX:Float, tY:Float)
+	Method ActivateGib:Void(tX:Float, tY:Float, tType:Int = GibType.ZOMBIE_FLESH)
 		Local done:Bool = False
 		While done = False
 			'If Gibs[NextGib].Active = False
-				Gibs[NextGib].Activate(tX, tY)
+				Gibs[NextGib].Activate(tX, tY, tType)
 				done = True
 			'EndIf
 			NextGib += 1
@@ -649,7 +719,7 @@ Class Level
 				If Zombies[i].Alive = True
 					If Zombies[i].Controlled = False
 						If Zombies[i].Mood = ZombieMood.WANDERING
-							If DistanceBetweenPoints(tX, tY, Zombies[i].X, Zombies[i].Y) < 100
+							If DistanceBetweenPoints(tX, tY, Zombies[i].X, Zombies[i].Y) < Shout.RADIUS
 								Zombies[i].GoForHero(tH)
 							EndIf
 						EndIf
@@ -660,6 +730,9 @@ Class Level
 	End
 	
 	Method CallToArms:Void(tX:Float, tY:Float, tZ:Int)
+	
+		Shout.Create(tX,tY)
+	
 		For Local i:Int = 0 Until ZombieCount
 			If i <> tZ
 				If Zombies[i].Alive = True
@@ -818,13 +891,14 @@ Function GenerateLevel:Level(tSeed:Int = 19132006)
 	tLev.HeroCount = HC
 	tLev.ZombieCount = ZC
 	
-	tLev.delta = 0.75
+	tLev.delta = 0.75 / LDApp.Delta
 	
 	tLev.InitHeroes()
 	tLev.InitZombies()
 	
 	Spit.Init(tLev)
 	Particle.Init(tLev)
+	Shout.Init(tLev)
 	
 	tLev.MortarLauncherCount = Rnd(0.0, 12.0)
 	tLev.InitMortarLaunchers()
